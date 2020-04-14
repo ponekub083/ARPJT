@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class DrawManager : MonoBehaviour
 {
+    bool ActiveDraw = false;
+    public DefaultTrackableEventHandler RootTop_Obj;
+    public DefaultTrackableEventHandler Base_Obj;
     public GameObject Top_Obj;
     public GameObject Floor_Obj;
     public GameObject prefab;
@@ -14,13 +17,14 @@ public class DrawManager : MonoBehaviour
     public float DistanceRoot = 5.0f; // ระยะห่างจากรอกถึงจุดหมนุ r
     public float Garvity = 9.81f;
     public float AnglePoint = 1.0f;
+    public float RangeHeightPoint = 1.0f;
     // โค้ดหา
     public float Height = 0.0f; // คำนวน จากพื้นถึง กรอก
     public float TempHeight = 0.0f; // Temp height เก็บไว้
     public float I_rpm = 0.0f;  //  I_rpm = (2 * Mathf.PI * Rpmf) / 60;
     public float V_Speed = 0.0f; // V_Speed = I_rpm * DistanceRoot
     public float T_time = 0.0f; // Mathf.Sqrt((2 * TempHeight) / Garvity);
-    public List<Vector3> Vector_Radius = new List<Vector3>(); // 
+    public List<Vector3> Vector_Radius = new List<Vector3>(); //
 
     float times = 0.0f;
     float y = 0.0f;
@@ -30,8 +34,26 @@ public class DrawManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        RootTop_Obj = GameObject.Find("Rok").GetComponent<DefaultTrackableEventHandler>();
+        Base_Obj = GameObject.Find("Base").GetComponent<DefaultTrackableEventHandler>();
         Top_Obj = GameObject.Find("Top");
         Floor_Obj = GameObject.Find("Floor");
+        
+    }
+
+
+    // Update is called once per frame
+    void Update()
+    {
+       if(!ActiveDraw && RootTop_Obj.bActiveFound && Base_Obj.bActiveFound)
+        {
+            ActiveDraw = true;
+            StartGenerated();
+        }
+    }
+
+    public void StartGenerated()
+    {
         Top_Obj.transform.localPosition = new Vector3(0, 0, DistanceRoot);
         Vector3 pos = Floor_Obj.transform.position;
         pos.z = DistanceRoot;
@@ -59,14 +81,6 @@ public class DrawManager : MonoBehaviour
         gameObj.GetComponent<MeshFilter>().mesh = mesh;
     }
 
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-        
-    }
-
     public void DrawDebug(Vector3 point)
     {
         // Debug.DrawLine(point, point, Color.red);
@@ -79,7 +93,7 @@ public class DrawManager : MonoBehaviour
 
     public void GeneratedPoint()
     {
-        for (TempHeight = 0; TempHeight < Top_Obj.transform.position.y + 1; TempHeight += 0.1f)
+        for (TempHeight = 0; TempHeight < Top_Obj.transform.position.y + 1; TempHeight += RangeHeightPoint)
         {
 
             T_time = Mathf.Sqrt((2 * TempHeight) / Garvity);
@@ -105,9 +119,10 @@ public class DrawManager : MonoBehaviour
                 Vector_Radius.Add(vector);
                 DrawDebug(vector);
                 if (TempHeight == 0)
-                    angle = 360 ;
+                    angle = 360;
+
             }
         }
-    }
 
+    }
 }
