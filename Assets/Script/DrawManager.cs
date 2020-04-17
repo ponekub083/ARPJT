@@ -26,7 +26,7 @@ public class DrawManager : MonoBehaviour
     public float T_time = 0.0f; // Mathf.Sqrt((2 * TempHeight) / Garvity);
     public List<Vector3> Vector_Radius = new List<Vector3>(); //
 
-    float times = 0.0f;
+    //float times = 0.0f;
     float y = 0.0f;
     float x = 0.0f;
     float z = 0.0f;
