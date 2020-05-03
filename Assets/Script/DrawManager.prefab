@@ -43,13 +43,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faae426d1bcaa8e41902d884a32f1a44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RealSizeOnWorld: 50
+  ScaleSizeInAppCm: 0
+  ScaleSizeInAppM: 0
+  SizeTracking: 50
+  RootTop_Obj: {fileID: 0}
+  Base_Obj: {fileID: 0}
   Top_Obj: {fileID: 0}
   Floor_Obj: {fileID: 0}
   prefab: {fileID: 4917768192884992259, guid: 300246ef1b5832a4fb9f48ad8ea5cc0b, type: 3}
   Rpmf: 10
-  DistanceRoot: 5
+  DistanceRoot: 2.5
   Garvity: 9.81
   AnglePoint: 1
+  RangeHeightPoint: 100
   Height: 0
   TempHeight: 0
   I_rpm: 0

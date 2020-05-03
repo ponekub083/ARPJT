@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class DrawManager : MonoBehaviour
 {
-    bool ActiveDraw = false;
+    public static DrawManager Instance { get; set; } // static singleton
+    public bool ActiveDraw = false;
+    public float RealSizeOnWorld = 50.0f; // cm
+    public float ScaleSizeInAppCm = 0.0f; // cm
+    public float ScaleSizeInAppM = 0.0f; // m
+    public float SizeTracking = 50.0f;
     public DefaultTrackableEventHandler RootTop_Obj;
     public DefaultTrackableEventHandler Base_Obj;
     public GameObject Top_Obj;
@@ -14,10 +19,10 @@ public class DrawManager : MonoBehaviour
     [Header("----Variable----")]
     // ตั้งเอง
     public float Rpmf = 10.0f; // Rpm f(ความมถี่)ความเร็วในการหมนุของเครน รอบ/นาที
-    public float DistanceRoot = 5.0f; // ระยะห่างจากรอกถึงจุดหมนุ r
+    public float DistanceRoot = 2.5f; // ระยะห่างจากรอกถึงจุดหมนุ r
     public float Garvity = 9.81f;
     public float AnglePoint = 1.0f;
-    public float RangeHeightPoint = 1.0f;
+    public float RangeHeightPoint = 100.0f;
     // โค้ดหา
     public float Height = 0.0f; // คำนวน จากพื้นถึง กรอก
     public float TempHeight = 0.0f; // Temp height เก็บไว้
@@ -25,7 +30,7 @@ public class DrawManager : MonoBehaviour
     public float V_Speed = 0.0f; // V_Speed = I_rpm * DistanceRoot
     public float T_time = 0.0f; // Mathf.Sqrt((2 * TempHeight) / Garvity);
     public List<Vector3> Vector_Radius = new List<Vector3>(); //
-
+    public List<GameObject> ListObjPoint = new List<GameObject>();
     //float times = 0.0f;
     float y = 0.0f;
     float x = 0.0f;
@@ -34,10 +39,13 @@ public class DrawManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ScaleSizeInAppCm = 1 / RealSizeOnWorld;
+        ScaleSizeInAppM = ScaleSizeInAppCm * 100;
         RootTop_Obj = GameObject.Find("Rok").GetComponent<DefaultTrackableEventHandler>();
         Base_Obj = GameObject.Find("Base").GetComponent<DefaultTrackableEventHandler>();
         Top_Obj = GameObject.Find("Top");
         Floor_Obj = GameObject.Find("Floor");
+        
         
     }
 
@@ -45,24 +53,23 @@ public class DrawManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       if(!ActiveDraw && RootTop_Obj.bActiveFound && Base_Obj.bActiveFound)
-        {
-            ActiveDraw = true;
-            StartGenerated();
-        }
     }
 
     public void StartGenerated()
     {
-        Top_Obj.transform.localPosition = new Vector3(0, 0, DistanceRoot);
+        if (ActiveDraw || !RootTop_Obj.bActiveFound || !Base_Obj.bActiveFound)
+            return;
+
+        ActiveDraw = true;
+        Top_Obj.transform.localPosition = new Vector3(0, 0, (DistanceRoot* ScaleSizeInAppM));
         Vector3 pos = Floor_Obj.transform.position;
-        pos.z = DistanceRoot;
+        pos.z = (DistanceRoot*ScaleSizeInAppM);
         Floor_Obj.transform.position = pos;
-        Height = Vector3.Distance(Top_Obj.transform.position, Floor_Obj.transform.position);
+        Height = Vector3.Distance(Top_Obj.transform.position, Floor_Obj.transform.position)*RealSizeOnWorld;
         //TempHeight = Height;
 
         I_rpm = (2 * Mathf.PI * Rpmf) / 60;
-        V_Speed = I_rpm * DistanceRoot;
+        V_Speed = I_rpm * (DistanceRoot*ScaleSizeInAppM);
 
         Vector2[] uv = new Vector2[0];
         int[] trianglesArr = new int[0];
@@ -86,14 +93,13 @@ public class DrawManager : MonoBehaviour
         // Debug.DrawLine(point, point, Color.red);
         //Debug.DrawLine(point, point + new Vector3(0,0.5f, 0), Color.reds);
         GameObject item = Instantiate(prefab, point, new Quaternion());
-
         item.name = "[" + point.x + "]" + "[" + point.y + "]" + "[" + point.z + "]";
-
+        ListObjPoint.Add(item);
     }
 
     public void GeneratedPoint()
     {
-        for (TempHeight = 0; TempHeight < Top_Obj.transform.position.y + 1; TempHeight += RangeHeightPoint)
+        for (TempHeight = 0; TempHeight < Top_Obj.transform.position.y + 1; TempHeight += (RangeHeightPoint*ScaleSizeInAppCm))
         {
 
             T_time = Mathf.Sqrt((2 * TempHeight) / Garvity);
@@ -115,7 +121,7 @@ public class DrawManager : MonoBehaviour
                     continue;
                 }
                 Vector3 vector = new Vector3(x, y, z);
-                vector = Top_Obj.transform.position - vector;
+                vector = (Top_Obj.transform.position) - vector;
                 Vector_Radius.Add(vector);
                 DrawDebug(vector);
                 if (TempHeight == 0)
@@ -125,4 +131,15 @@ public class DrawManager : MonoBehaviour
         }
 
     }
+
+    public void ClearAll()
+    {
+        foreach (GameObject item in ListObjPoint)
+        {
+            Destroy(item);
+        }
+
+        ListObjPoint.Clear();
+    }
+
 }
