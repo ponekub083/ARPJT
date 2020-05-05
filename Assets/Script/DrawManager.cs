@@ -5,6 +5,8 @@ using UnityEngine;
 public class DrawManager : MonoBehaviour
 {
     public static DrawManager Instance { get; set; } // static singleton
+    public bool Top_Obj_ActiveFound = false;
+    public bool Floor_Obj_ActiveFound = false;
     public bool ActiveDraw = false;
     public float RealSizeOnWorld = 50.0f; // cm
     public float ScaleSizeInAppCm = 0.0f; // cm
@@ -53,11 +55,13 @@ public class DrawManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Top_Obj_ActiveFound = Top_Obj.GetComponent<MeshRenderer>().enabled;
+        Floor_Obj_ActiveFound = Floor_Obj.GetComponent<MeshRenderer>().enabled;
     }
 
     public void StartGenerated()
     {
-        if (ActiveDraw || !RootTop_Obj.bActiveFound || !Base_Obj.bActiveFound)
+        if (ActiveDraw || !Floor_Obj_ActiveFound || !Top_Obj_ActiveFound)
             return;
 
         ActiveDraw = true;

@@ -38,8 +38,8 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        toggleCrane.isOn = RootTop_Obj.bActiveFound;
-        toggleArea.isOn = Base_Obj.bActiveFound;
+        toggleCrane.isOn = Draw_Manager.Top_Obj_ActiveFound;
+        toggleArea.isOn = Draw_Manager.Floor_Obj_ActiveFound;
         CalculateButton.interactable = toggleCrane.isOn && toggleArea.isOn && !Draw_Manager.ActiveDraw;
         ClearButton.interactable = Draw_Manager.ActiveDraw;
     }
