@@ -38,8 +38,8 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        toggleCrane.isOn = Draw_Manager.Top_Obj_ActiveFound;
-        toggleArea.isOn = Draw_Manager.Floor_Obj_ActiveFound;
+        toggleCrane.isOn = RootTop_Obj.GetComponentInChildren<Renderer>().enabled;
+        toggleArea.isOn = Base_Obj.GetComponentInChildren<Renderer>().enabled;
         CalculateButton.interactable = toggleCrane.isOn && toggleArea.isOn && !Draw_Manager.ActiveDraw;
         ClearButton.interactable = Draw_Manager.ActiveDraw;
     }
@@ -56,23 +56,27 @@ public class UIManager : MonoBehaviour
 
     public void OnSaveButton()
     {
+        Draw_Manager.CalculateStart();
         OnToggleSettingPanal();
     }
 
     public void OnSizeTracking(string str)
     {
-        float value;
-        float.TryParse(str,out value);
+        str = SizeTracking.text;
+        int value;
+        int.TryParse(str,out value);
         Draw_Manager.RealSizeOnWorld = value;
     }
     public void OnDistanceRoot(string str)
     {
+        str = DistanceRoot.text;
         float value;
         float.TryParse(str, out value);
         Draw_Manager.DistanceRoot = value;
     }
     public void OnSpeed(string str)
     {
+        str = Speed.text;
         float value;
         float.TryParse(str, out value);
         Draw_Manager.Rpmf = value;
@@ -83,12 +87,14 @@ public class UIManager : MonoBehaviour
     }
     public void OnRangeHeightPoint(string str)
     {
+        str = Height.text;
         float value;
         float.TryParse(str, out value);
         Draw_Manager.RangeHeightPoint = value;
     }
     public void OnAngle(string str)
     {
+        str = Angle.text;
         float value;
         float.TryParse(str, out value);
         Draw_Manager.AnglePoint = value;

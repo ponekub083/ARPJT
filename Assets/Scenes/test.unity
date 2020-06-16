@@ -254,7 +254,7 @@ GameObject:
   - component: {fileID: 1007514852}
   - component: {fileID: 1007514851}
   m_Layer: 0
-  m_Name: Plane
+  m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -291,7 +291,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 66c583bb176077d4d942b767246bd390, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -344,7 +344,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1586529809}
   m_Layer: 0
-  m_Name: RootTop
+  m_Name: Rok
   m_TagString: Untagged
   m_Icon: {fileID: 419385456094870383, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -472,7 +472,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1817503633}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 3}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1586529809}
@@ -548,12 +548,27 @@ PrefabInstance:
     - target: {fileID: 8660569437141780294, guid: 0716bc32471c0014ea6bfd295db84d96,
         type: 3}
       propertyPath: AnglePoint
-      value: 9
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8660569437141780294, guid: 0716bc32471c0014ea6bfd295db84d96,
         type: 3}
       propertyPath: RangeHeightPoint
-      value: 1
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8660569437141780294, guid: 0716bc32471c0014ea6bfd295db84d96,
+        type: 3}
+      propertyPath: ScaleSizeInAppCm
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8660569437141780294, guid: 0716bc32471c0014ea6bfd295db84d96,
+        type: 3}
+      propertyPath: RealSizeOnWorld
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8660569437141780294, guid: 0716bc32471c0014ea6bfd295db84d96,
+        type: 3}
+      propertyPath: DistanceRoot
+      value: 0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0716bc32471c0014ea6bfd295db84d96, type: 3}

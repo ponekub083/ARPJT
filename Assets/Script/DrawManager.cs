@@ -1,13 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class DrawManager : MonoBehaviour
 {
     public static DrawManager Instance { get; set; } // static singleton
-    public bool Top_Obj_ActiveFound = false;
-    public bool Floor_Obj_ActiveFound = false;
     public bool ActiveDraw = false;
+    public bool ActiveDraw_rok =false;
+    public bool ActiveDraw_Base=false;
     public float RealSizeOnWorld = 50.0f; // cm
     public float ScaleSizeInAppCm = 0.0f; // cm
     public float ScaleSizeInAppM = 0.0f; // m
@@ -41,31 +40,32 @@ public class DrawManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        ScaleSizeInAppCm = 1 / RealSizeOnWorld;
-        ScaleSizeInAppM = ScaleSizeInAppCm * 100;
+        CalculateStart();
         RootTop_Obj = GameObject.Find("Rok").GetComponent<DefaultTrackableEventHandler>();
         Base_Obj = GameObject.Find("Base").GetComponent<DefaultTrackableEventHandler>();
         Top_Obj = GameObject.Find("Top");
         Floor_Obj = GameObject.Find("Floor");
-        
-        
     }
-
 
     // Update is called once per frame
     void Update()
     {
-        Top_Obj_ActiveFound = Top_Obj.GetComponent<MeshRenderer>().enabled;
-        Floor_Obj_ActiveFound = Floor_Obj.GetComponent<MeshRenderer>().enabled;
+        //ActiveDraw_rok = RootTop_Obj.GetComponentInChildren<Renderer>().enabled;
+        //ActiveDraw_Base = Base_Obj.GetComponentInChildren<Renderer>().enabled;
     }
 
+    public void CalculateStart()
+    {
+        ScaleSizeInAppCm = 1 / RealSizeOnWorld;
+        ScaleSizeInAppM = ScaleSizeInAppCm * 100;
+    }
     public void StartGenerated()
     {
-        if (ActiveDraw || !Floor_Obj_ActiveFound || !Top_Obj_ActiveFound)
+        if (ActiveDraw)
             return;
 
         ActiveDraw = true;
-        Top_Obj.transform.localPosition = new Vector3(0, 0, (DistanceRoot* ScaleSizeInAppM));
+        Top_Obj.transform.localPosition = new Vector3(0, 0,0 /*(DistanceRoot* ScaleSizeInAppM)*/);
         Vector3 pos = Floor_Obj.transform.position;
         pos.z = (DistanceRoot*ScaleSizeInAppM);
         Floor_Obj.transform.position = pos;
@@ -81,7 +81,7 @@ public class DrawManager : MonoBehaviour
         Mesh mesh = new Mesh();
 
         GeneratedPoint();
-
+        /*
         mesh.vertices = Vector_Radius.ToArray();
         mesh.uv = uv;
         mesh.triangles = trianglesArr;
@@ -89,47 +89,40 @@ public class DrawManager : MonoBehaviour
         GameObject gameObj = new GameObject("Mesh", typeof(MeshFilter), typeof(MeshRenderer));
         gameObj.transform.localScale = new Vector3(1, 1, 1);
 
-        gameObj.GetComponent<MeshFilter>().mesh = mesh;
+        gameObj.GetComponent<MeshFilter>().mesh = mesh;*/
     }
 
-    public void DrawDebug(Vector3 point)
+    public void DrawDebug(float angle,Vector3 point)
     {
         // Debug.DrawLine(point, point, Color.red);
         //Debug.DrawLine(point, point + new Vector3(0,0.5f, 0), Color.reds);
         GameObject item = Instantiate(prefab, point, new Quaternion());
-        item.name = "[" + point.x + "]" + "[" + point.y + "]" + "[" + point.z + "]";
+        item.name = "[" + angle + "]" + "[" + point.x + "]" + "[" + point.y + "]" + "[" + point.z + "]";
         ListObjPoint.Add(item);
     }
 
     public void GeneratedPoint()
     {
-        for (TempHeight = 0; TempHeight < Top_Obj.transform.position.y + 1; TempHeight += (RangeHeightPoint*ScaleSizeInAppCm))
+        for (TempHeight = Top_Obj.transform.position.y; TempHeight >= 0; TempHeight -= (RangeHeightPoint*ScaleSizeInAppCm))
         {
 
             T_time = Mathf.Sqrt((2 * TempHeight) / Garvity);
-
             x = V_Speed * T_time;
             y = TempHeight;
+            radius = Mathf.Abs(x);
 
             for (float angle = 0; angle < 360; angle += AnglePoint)
             {
-                if (angle != 0)
-                {
-                    z = radius * Mathf.Sin(angle);
-                    x = radius * Mathf.Cos(angle);
+                Vector3 centerTop = Top_Obj.transform.position;
+                float cornerAngle = 2f * Mathf.PI / (float)360 * angle;
+                x = centerTop.x +  (Mathf.Cos(cornerAngle) * radius) ;
+                z = centerTop.z +  (Mathf.Sin(cornerAngle) * radius) ;
 
-                }
-                else
-                {
-                    radius = Mathf.Abs(x);
-                    continue;
-                }
-                Vector3 vector = new Vector3(x, y, z);
-                vector = (Top_Obj.transform.position) - vector;
+                Vector3 vector = new Vector3(x,y, z);
+                vector.y = Top_Obj.transform.position.y - vector.y;
+
                 Vector_Radius.Add(vector);
-                DrawDebug(vector);
-                if (TempHeight == 0)
-                    angle = 360;
+                DrawDebug(angle,vector);
 
             }
         }
@@ -142,7 +135,7 @@ public class DrawManager : MonoBehaviour
         {
             Destroy(item);
         }
-
+        Vector_Radius.Clear();
         ListObjPoint.Clear();
     }
 
