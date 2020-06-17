@@ -98,12 +98,14 @@ public class DrawManager : MonoBehaviour
         //Debug.DrawLine(point, point + new Vector3(0,0.5f, 0), Color.reds);
         GameObject item = Instantiate(prefab, point, new Quaternion());
         item.name = "[" + angle + "]" + "[" + point.x + "]" + "[" + point.y + "]" + "[" + point.z + "]";
+        float size = 0.2f * ScaleSizeInAppCm;
+        item.transform.localScale = new Vector3(size, size, size);
         ListObjPoint.Add(item);
     }
 
     public void GeneratedPoint()
     {
-        for (TempHeight = Top_Obj.transform.position.y; TempHeight >= 0; TempHeight -= (RangeHeightPoint*ScaleSizeInAppCm))
+        for (TempHeight = 0; TempHeight < Top_Obj.transform.position.y+1 ; TempHeight += (RangeHeightPoint*ScaleSizeInAppCm))
         {
 
             T_time = Mathf.Sqrt((2 * TempHeight) / Garvity);
@@ -137,6 +139,7 @@ public class DrawManager : MonoBehaviour
         }
         Vector_Radius.Clear();
         ListObjPoint.Clear();
+        ActiveDraw = false;
     }
 
 }
