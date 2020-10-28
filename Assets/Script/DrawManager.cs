@@ -125,7 +125,6 @@ public class DrawManager : MonoBehaviour
 
                 Vector_Radius.Add(vector);
                 DrawDebug(angle,vector);
-
             }
         }
 
