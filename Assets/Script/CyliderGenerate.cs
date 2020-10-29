@@ -11,9 +11,9 @@ public class CyliderGenerate : MonoBehaviour
 
     int num;
 
-    public int iter;
-    public int leng;
-    public int radius;
+    public float iter;
+    public float leng;
+    public float radius;
 
     Vector3[] vertices;
     int[] tris;
@@ -26,7 +26,7 @@ public class CyliderGenerate : MonoBehaviour
         MakingVertices(radius, iter, leng, 1.0f, 0.1f);
     }
 
-    void MakingVertices(int radius, int iterations, int lenggth, float gap, float noise)
+    void MakingVertices(float radius, float iterations, float lenggth, float gap, float noise)
     {
         float noise_x;
         float noise_y;
@@ -38,16 +38,16 @@ public class CyliderGenerate : MonoBehaviour
         int p = 0;
         float angle;
 
-        vertices = new Vector3[(iterations * lenggth) + 2];
+        vertices = new Vector3[(Mathf.CeilToInt(iterations) * Mathf.CeilToInt(lenggth)) + 2];
         int tempo = 0;
         vertices[vertices.Length - 2] = Vector3.zero;
 
-        while (p < lenggth)
+        while (p < Mathf.CeilToInt(lenggth))
         {
             i = 0;
-            while (i < iterations)
+            while (i < Mathf.CeilToInt(iterations))
             {
-                angle = (i * 1.0f) / iterations * Mathf.PI * 2;
+                angle = (i * 1.0f) / Mathf.CeilToInt(iterations) * Mathf.PI * 2;
                 x = Mathf.Sin(angle) * radius;
                 z = Mathf.Cos(angle) * radius;
                 vertices[tempo] = new Vector3(x, y, z);
@@ -86,19 +86,19 @@ public class CyliderGenerate : MonoBehaviour
     {
         Debug.Log(" MakingTrianges");
         int i = 0;
-        tris = new int[((3 * (leng - 1) * iter) * 2) + 3];
-        while (i < (leng - 1) * iter)
+        tris = new int[((3 * (Mathf.CeilToInt(leng) - 1) * Mathf.CeilToInt(iter)) * 2) + 3];
+        while (i < (Mathf.CeilToInt(leng) - 1) * Mathf.CeilToInt(iter))
         {
             tris[i * 3] = i;
-            if ((i + 1) % iter == 0)
+            if ((i + 1) % Mathf.CeilToInt(iter) == 0)
             {
-                tris[i * 3 + 1] = 1 + i - iter;
+                tris[i * 3 + 1] = 1 + i - Mathf.CeilToInt(iter);
             }
             else
             {
                 tris[i * 3 + 1] = 1 + i;
             }
-            tris[i * 3 + 2] = iter + i;
+            tris[i * 3 + 2] = Mathf.CeilToInt(iter) + i;
             i++;
         }
         int IndexofNewTriangles = -1;
@@ -106,29 +106,29 @@ public class CyliderGenerate : MonoBehaviour
         for (int u = (tris.Length - 3) / 2; u < tris.Length - 6; u += 3)
         {
             //mesh.RecalculateTangents();
-            if ((IndexofNewTriangles + 2) % iter == 0)
+            if ((IndexofNewTriangles + 2) % Mathf.CeilToInt(iter) == 0)
             {
-                tris[u] = IndexofNewTriangles + iter * 2 + 1;
+                tris[u] = IndexofNewTriangles + Mathf.CeilToInt(iter) * 2 + 1;
             }
             else
-                tris[u] = IndexofNewTriangles + iter + 1;
+                tris[u] = IndexofNewTriangles + Mathf.CeilToInt(iter) + 1;
 
             tris[u + 1] = IndexofNewTriangles + 2;
-            tris[u + 2] = IndexofNewTriangles + iter + 2;
+            tris[u + 2] = IndexofNewTriangles + Mathf.CeilToInt(iter) + 2;
             IndexofNewTriangles += 1;
         }
         tris[tris.Length - 3] = 0;
-        tris[tris.Length - 2] = (iter * 2) - 1;
-        tris[tris.Length - 1] = iter;
+        tris[tris.Length - 2] = (Mathf.CeilToInt(iter) * 2) - 1;
+        tris[tris.Length - 1] = Mathf.CeilToInt(iter);
 
-        firstplane = new int[(iter * 3) * 2];
+        firstplane = new int[(Mathf.CeilToInt(iter) * 3) * 2];
         int felmnt = 0;
         for (int h = 0; h < firstplane.Length / 2; h += 3)
         {
 
             firstplane[h] = felmnt;
 
-            if (felmnt + 1 != iter)
+            if (felmnt + 1 != Mathf.CeilToInt(iter))
                 firstplane[h + 1] = felmnt + 1;
             else
                 firstplane[h + 1] = 0;
@@ -136,21 +136,21 @@ public class CyliderGenerate : MonoBehaviour
             felmnt += 1;
         }
 
-        felmnt = iter * (leng - 1);
+        felmnt = Mathf.CeilToInt(iter) * (Mathf.CeilToInt(leng) - 1);
         for (int h = firstplane.Length / 2; h < firstplane.Length; h += 3)
         {
 
             firstplane[h] = felmnt;
 
-            if (felmnt + 1 != iter * (leng - 1))
+            if (felmnt + 1 != Mathf.CeilToInt(iter) * (Mathf.CeilToInt(leng) - 1))
                 firstplane[h + 1] = felmnt + 1;
             else
-                firstplane[h + 1] = iter * (leng - 1);
+                firstplane[h + 1] = Mathf.CeilToInt(iter) * (Mathf.CeilToInt(leng) - 1);
             firstplane[h + 2] = vertices.Length - 1;
             felmnt += 1;
         }
 
-        firstplane[firstplane.Length - 3] = iter * (leng - 1);
+        firstplane[firstplane.Length - 3] = Mathf.CeilToInt(iter) * (Mathf.CeilToInt(leng) - 1);
         firstplane[firstplane.Length - 2] = vertices.Length - 3;
         firstplane[firstplane.Length - 1] = vertices.Length - 1;
 

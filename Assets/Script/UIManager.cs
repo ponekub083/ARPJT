@@ -6,17 +6,22 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     Animator AnimManager;
+
     public static UIManager Instance { get; set; }
     public Toggle toggleCrane;
     public Toggle toggleArea;
     public Button CalculateButton;
     public Button ClearButton;
     public InputField SizeTracking;
-    public InputField DistanceRoot;
-    public InputField Speed;
-    public InputField Height;
-    public InputField Angle;
+    public InputField f_min;
+    public InputField f_max;
+    public InputField radius;
+    public InputField H_big;
+    public InputField h_small;
 
+    public Renderer red;
+    public Renderer yellow;
+    public Renderer green;
 
     public CalculateDrawManager Calculate_Manager;
     // Start is called before the first frame update
@@ -24,19 +29,24 @@ public class UIManager : MonoBehaviour
     {
         AnimManager = GetComponent<Animator>();
 
-        //SizeTracking.text = Draw_Manager. .ToString();
-        //DistanceRoot.text = Draw_Manager.DistanceRoot.ToString();
-        //Speed.text = Draw_Manager.Rpmf.ToString();
-        //Height.text = Draw_Manager.RangeHeightPoint.ToString();
-        //Angle.text = Draw_Manager.AnglePoint.ToString();
+        SizeTracking.text = Calculate_Manager.SizeTracking.ToString();
+        f_min.text = Calculate_Manager.f_min.ToString();
+        f_max.text = Calculate_Manager.f_max.ToString();
+        radius.text = Calculate_Manager.radius.ToString();
+        H_big.text = Calculate_Manager.H_big.ToString();
+        h_small.text = Calculate_Manager.h_small.ToString();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        CalculateButton.interactable = red.enabled && yellow.enabled && green.enabled;
     }
-
+    public void OnCalculate()
+    {
+        Calculate_Manager.generate();
+    }
 
     public void OnToggleSettingPanal()
     {
@@ -57,6 +67,47 @@ public class UIManager : MonoBehaviour
         str = SizeTracking.text;
         int value;
         int.TryParse(str,out value);
-        Draw_Manager.RealSizeOnWorld = value;
+        Calculate_Manager.SizeTracking = value;
     }
+
+    public void OnH_big(string str)
+    {
+        str = H_big.text;
+        int value;
+        int.TryParse(str, out value);
+        Calculate_Manager.H_big = value;
+    }
+
+    public void Onh_small(string str)
+    {
+        str = h_small.text;
+        int value;
+        int.TryParse(str, out value);
+        Calculate_Manager.h_small = value;
+    }
+
+    public void Onf_min(string str)
+    {
+        str = f_min.text;
+        int value;
+        int.TryParse(str, out value);
+        Calculate_Manager.f_min = value;
+    }
+
+    public void Onf_max(string str)
+    {
+        str = f_max.text;
+        int value;
+        int.TryParse(str, out value);
+        Calculate_Manager.f_max = value;
+    }
+
+    public void OnRadius(string str)
+    {
+        str = radius.text;
+        int value;
+        int.TryParse(str, out value);
+        Calculate_Manager.radius = value;
+    }
+
 }
