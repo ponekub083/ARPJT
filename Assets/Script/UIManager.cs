@@ -17,31 +17,24 @@ public class UIManager : MonoBehaviour
     public InputField Height;
     public InputField Angle;
 
-    DefaultTrackableEventHandler RootTop_Obj;
-    DefaultTrackableEventHandler Base_Obj;
 
-    public DrawManager Draw_Manager;
+    public CalculateDrawManager Calculate_Manager;
     // Start is called before the first frame update
     void Start()
     {
         AnimManager = GetComponent<Animator>();
-        RootTop_Obj = GameObject.Find("Rok").GetComponent<DefaultTrackableEventHandler>();
-        Base_Obj = GameObject.Find("Base").GetComponent<DefaultTrackableEventHandler>();
 
-        SizeTracking.text = Draw_Manager.RealSizeOnWorld.ToString();
-        DistanceRoot.text = Draw_Manager.DistanceRoot.ToString();
-        Speed.text = Draw_Manager.Rpmf.ToString();
-        Height.text = Draw_Manager.RangeHeightPoint.ToString();
-        Angle.text = Draw_Manager.AnglePoint.ToString();
+        //SizeTracking.text = Draw_Manager. .ToString();
+        //DistanceRoot.text = Draw_Manager.DistanceRoot.ToString();
+        //Speed.text = Draw_Manager.Rpmf.ToString();
+        //Height.text = Draw_Manager.RangeHeightPoint.ToString();
+        //Angle.text = Draw_Manager.AnglePoint.ToString();
     }
 
     // Update is called once per frame
     void Update()
     {
-        toggleCrane.isOn = RootTop_Obj.GetComponentInChildren<Renderer>().enabled;
-        toggleArea.isOn = Base_Obj.GetComponentInChildren<Renderer>().enabled;
-        CalculateButton.interactable = toggleCrane.isOn && toggleArea.isOn && !Draw_Manager.ActiveDraw;
-        ClearButton.interactable = Draw_Manager.ActiveDraw;
+
     }
 
 
@@ -56,7 +49,6 @@ public class UIManager : MonoBehaviour
 
     public void OnSaveButton()
     {
-        Draw_Manager.CalculateStart();
         OnToggleSettingPanal();
     }
 
@@ -66,46 +58,5 @@ public class UIManager : MonoBehaviour
         int value;
         int.TryParse(str,out value);
         Draw_Manager.RealSizeOnWorld = value;
-    }
-    public void OnDistanceRoot(string str)
-    {
-        str = DistanceRoot.text;
-        float value;
-        float.TryParse(str, out value);
-        Draw_Manager.DistanceRoot = value;
-    }
-    public void OnSpeed(string str)
-    {
-        str = Speed.text;
-        float value;
-        float.TryParse(str, out value);
-        Draw_Manager.Rpmf = value;
-    }
-    public void OnVelocity(string str)
-    {
-        //Draw_Manager.V = float.Parse(str);
-    }
-    public void OnRangeHeightPoint(string str)
-    {
-        str = Height.text;
-        float value;
-        float.TryParse(str, out value);
-        Draw_Manager.RangeHeightPoint = value;
-    }
-    public void OnAngle(string str)
-    {
-        str = Angle.text;
-        float value;
-        float.TryParse(str, out value);
-        Draw_Manager.AnglePoint = value;
-    }
-    public void OnCalculateButton()
-    {
-        Draw_Manager.StartGenerated();
-    }
-
-    public void OnClearAllButton()
-    {
-        Draw_Manager.ClearAll();
     }
 }
