@@ -53,12 +53,12 @@ public class CalculateDrawManager : MonoBehaviour
         W_max = (2 * Mathf.PI * f_max) / 60;
         U_max = W_max * radius;
         T_max = Mathf.Sqrt((2 * Hh) / g);
-        D_max = U_max * T_max;
+        D_max = (U_max * T_max) + radius;
 
         W_min = (2 * Mathf.PI * f_min) / 60;
         U_min = W_min * radius;
         T_min = Mathf.Sqrt((2 * Hh) / g);
-        D_min = U_min * T_min;
+        D_min = (U_min * T_min)+ radius ;
 
 
         float radius_min = Mathf.Abs(D_min);
@@ -67,11 +67,11 @@ public class CalculateDrawManager : MonoBehaviour
 
         generater_normal.radius = radius ;
         generater_normal.iter = 20;
-        generater_normal.leng = (Hh + 2.0f);
+        generater_normal.leng = (Hh);
 
         generater_min.radius = radius_min;
         generater_min.iter = 20;
-        generater_min.leng = (Hh + 1.0f);
+        generater_min.leng = (Hh);
 
         generater_max.radius = radius_max;
         generater_max.iter = 20;
